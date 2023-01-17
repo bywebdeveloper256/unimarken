@@ -1,0 +1,161 @@
+<?php
+
+namespace EskofrizImport;
+
+class SPlistRegularShopping{
+
+    public function init()
+    {
+        add_filter( 'woocommerce_account_menu_items',                   array( $this, 'sp_log_history_link' ), 40 );
+        add_action( 'init',                                             array( $this, 'sp_add_endpoint' ) );
+        add_action( 'woocommerce_account_compras-habituales_endpoint',  array( $this, 'sp_my_account_endpoint_content' ) );
+    }
+   
+    function sp_log_history_link( $menu_links )
+    {	
+        
+        $menu_links = array_slice( $menu_links, 0, 5, true ) 
+        + array( 'compras-habituales' => 'Compras habituales' )
+        + array_slice( $menu_links, 5, NULL, true );
+        
+        return $menu_links;
+    }
+    
+    function sp_add_endpoint()
+    {
+        // WP_Rewrite is my Achilles' heel, so please do not ask me for detailed explanation
+        add_rewrite_endpoint( 'compras-habituales', EP_PAGES );
+    }
+    /*
+     * Step 3. Content for the new page in My Account, woocommerce_account_{ENDPOINT NAME}_endpoint
+     */
+
+    function sp_my_account_endpoint_content()
+    {
+        ?>
+        <table class="woocommerce-table woocommerce-table--order-details shop_table order_details list_orders_erp"> 
+            <thead>
+                <tr>
+                    <th class="woocommerce-table__product-name product-name">SKU</th>
+                    <th class="woocommerce-table__product-table product-total">Nombre del producto</th>
+                    <th class="woocommerce-table__product-table product-total">Cantidad</th>
+                    <th class="woocommerce-table__product-table product-total">Precio</th>
+                    <th class="woocommerce-table__product-table product-total">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody class="list-product-order">
+        <?php
+        global $wpdb;
+
+        $tabla          = "{$wpdb->prefix}sp_orders_hab_erp";
+
+        $list_info_user = get_the_author_meta( 'aditional_info_user', get_current_user_id() );
+
+        $code_user      = isset($list_info_user['Código cliente']) ? $list_info_user['Código cliente'] : '1234';
+        
+        $query          = "SELECT *  FROM $tabla WHERE $tabla.cli_cod = $code_user";
+
+        $list           = $wpdb->get_results($query,ARRAY_A);
+
+        if(empty($list)){
+            echo '<tr class="woocommerce-table__line-item order_item"><td class="woocommerce-table__product-name product-name">';
+            echo 'No hay productos en lista de compras habituales';
+            echo '</td></tr>';
+        }
+        
+        $count_nex      = isset($_POST['next-art']) ? $_POST['next-art'] : 10;
+
+        $count_prev     = $count_nex - 10;
+
+        $data_product   = [];
+
+        for( $i=0; $i < count( $list ); $i++ ):
+
+            if( empty( $list[$i] ) )
+            {
+                continue;
+            }
+
+            $id_product = wc_get_product_id_by_sku( $list[$i]['cod_art'] );
+
+            if( $id_product == 0 )
+            {
+                continue;
+            }
+
+            $product    = wc_get_product( $id_product );
+            $title      = isset($id_product)            ? get_the_title($id_product): '';
+            $permalink  = isset($id_product)            ? get_permalink($id_product): '';
+            $price      = number_format( $product->get_price(), 2 );
+            $code_art   = empty( $list[$i]['cod_art'])  ?  '' :  $list[$i]['cod_art'];
+            $num_uni    = empty( $list[$i]['num_uni'])  ?  '' :  $list[$i]['num_uni'];
+            $uni_cod    = empty( $list[$i]['uni_cod'])  ?  '' :  $list[$i]['uni_cod'];
+            $disabled   = $product->get_stock_quantity() > 0 ? true : false;
+                
+            $data_product[] = array(
+                'id'        => $id_product,
+                'title'     => $title,
+                'url'       => $permalink,
+                'price'     => $price,
+                'sku'       => $code_art,
+                'num_uni'   => $num_uni,
+                'uni_cod'   => $uni_cod,
+                'disabled'  => $disabled
+            );
+
+        endfor;
+				
+        for( $i = $count_prev; $i < $count_nex; $i++ ):
+
+        if( empty( $data_product[$i] ) )
+        {
+            continue;
+        }		
+
+		$title_buttom = empty($data_product[$i]['disabled']) ? 'Sin stock' : 'Añadir al carrito';
+	    ?>
+			
+        <tr class="woocommerce-table__line-item order_item">
+
+            <td class="woocommerce-table__product-name product-name"><a href=""></a><?php echo $data_product[$i]['sku'];?></td>
+            <td class="woocommerce-table__product-name product-name"><a href="<?php echo $data_product[$i]['url']; ?>"><?php echo $data_product[$i]['title']; ?></a></td>
+            <td class="woocommerce-table__product-total product-total total"><?php echo $data_product[$i]['num_uni'].' - '.$data_product[$i]['uni_cod'];?></td>
+            <td class="woocommerce-table__product-total product-total"><?php echo $data_product[$i]['price'];?> €	</td>
+            <td class="woocommerce-table__product-total product-total">     
+                <button data-quantity="<?php echo $data_product[$i]['num_uni'];?>" <?php if(!$data_product[$i]['disabled']){echo "style='    width: 135px;     background: #a1a1a19c; pointer-events: none; '";}?> class="btn woocommerce-button btn-general button view single_add_to_cart_button_custom" data-product_id="<?php echo $data_product[$i]['id']; ?>" data-product_sku="" aria-label="Añade “<?php echo $data_product[$i]['title']; ?>” a tu carrito" rel="nofollow"><?php echo $title_buttom; ?></button>    
+            </td>
+       
+        </tr>
+
+        <?php endfor; ?>
+
+		    </tbody>
+
+	        </table>
+
+            <div class="flex-btn-custom">
+
+                <?php if( $count_nex > 10 ): ?>
+    
+                <form action="" method="post" style="width: 135px;">
+                    <input type="hidden" name="next-art" value="<?php echo $count_nex - 10;?>">
+                    <button class="btn-general" type="submit" name="next-btn">Anterior</button>
+                </form>
+    
+        <?php endif; ?>
+        
+        <?php if( $count_nex < count( $list ) ):?>
+
+        <form action="" method="post" style="width: 135px;">
+            <input type="hidden" name="next-art" value="<?php echo $count_nex + 10;?>">
+            <button class="btn-general" type="submit" name="next-btn">Siguiente</button>
+        </form>
+
+        <?php endif; ?>
+
+        </div>
+        <?php
+    
+    }
+}

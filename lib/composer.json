@@ -1,0 +1,16 @@
+{
+    "name": "telepay/telepay",
+    "description": "TelePay Woocommerce Plugin",
+    "require": {
+        "cmb2/cmb2": "dev-master"
+    },
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+    
+        "files": ["vendor/cmb2/cmb2/init.php"],
+        "telepayCash\\": "classes/"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
+}

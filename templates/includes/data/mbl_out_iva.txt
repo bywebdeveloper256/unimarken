@@ -1,0 +1,14 @@
+IVA	12	00	0	0	Isento - desc e abat. e bonus vendas	ISE
+IVA	12	18	18	0	IVA NORMAL AÇORES	NOR
+IVA	12	1A	21	5,2	IVA  Normal	
+IVA	12	1R	21	0	IVA  Normal sin recargo	
+IVA	12	22	22	0	NORM. merc.	NOR
+IVA	12	23	23	0	NORMAL MERCADORIAS	NOR
+IVA	12	2A	10	1,4	IVA  Reducido	INT
+IVA	12	3 	4	0,5	IVA Super-Reducido	RED
+IVA	12	3R	4	0	IVA Super-Reducido sin recargo	RED
+IVA	12	4 	4	0	REDUCIDO MADEIRA/AÇORES	RED
+IVA	12	5 	0	0	Exento	ISE
+IVA	12	C1	0	0	IGIC 0%	
+IVA	12	C2	3	0	IGIC 3%	
+IVA	12	C3	7	0	IGIC 7%	

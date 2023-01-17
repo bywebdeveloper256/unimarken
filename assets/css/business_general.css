@@ -1,0 +1,141 @@
+input{
+  border: 1px solid #ced4da !important;
+}
+
+[type=button], [type=submit], button {
+  border: 1px solid #4A6F9F !important;
+}
+
+.lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #7e7e7e;
+    border-color: #7e7e7e transparent #7e7e7e transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+  }
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+#overlay-spinner{
+    background-color: #fffffc85;
+    z-index: 10000;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.heigh-45px{
+    height: 42px;
+}
+
+.sizeflags{
+  width: 30px;
+}
+
+.delete-bag {
+  background-color: red !important;
+}
+
+.woocommerce-MyAccount-navigation ul{
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+
+.woocommerce-MyAccount-navigation li{
+  padding: 10px 20px;
+  border-radius: 7px;
+  margin-bottom: 1px;
+}
+
+.elementor-kit-13 .is-active a {
+  color: #fff !important;
+}
+
+p.no_subscriptions a.woocommerce-Button.button {
+  display: none;
+}
+
+.woocommerce-MyAccount-navigation li:hover, .is-active{
+  background-color: #4A6F9F;
+  color: white !important;
+  transition: 0.5s;
+}
+
+.woocommerce-MyAccount-navigation li:hover a{
+  color: white !important;
+}
+
+.woocommerce button.button{
+  border-radius: 30px 30px 30px 30px !important;
+  padding: 18px 30px 18px 30px !important;
+  background-color: #4A6F9F !important;
+  color: white !important;
+}
+
+.woocommerce button.button:hover{
+  background-color: white !important;
+  color: #4A6F9F !important;
+}
+
+a.prev.page-numbers, a.page-numbers, span.page-numbers.current {
+  border: solid 1px;
+  padding: 7px 12px;
+  border-radius: 25px;
+}
+
+a.prev.page-numbers, a.page-numbers{
+  background-color: #4A6F9F;
+  color: #fff !important;
+  display: inline-block;
+}
+
+a.page-numbers:hover{
+  
+  color: #fff;
+}
+
+span.page-numbers.current{
+  background-color: transparent;
+  color: #4A6F9F;
+  border-color: #4A6F9F;
+  display: inline-block;
+}
+
+[type=button]:focus, [type=submit]:focus, button:focus {
+  outline: 0px auto -webkit-focus-ring-color !important;
+}
+
+.content-logo{
+  min-height: 300px;
+}
+
+.u-column1.col-1.woocommerce-Address {
+  width: 100%;
+}
+
+div#content-result-business .card {
+  min-height: 190px !important;
+}
+
+div#content-result-business .card img {
+  max-height: 100px !important;
+}
